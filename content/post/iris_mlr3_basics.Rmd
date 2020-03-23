@@ -5,7 +5,7 @@ date: '2020-03-18'
 slug: mlr3-basics-iris
 categories: []
 tags: ['mlr3', 'basics']
-packages: ['mlr3', 'mlr3learners']
+packages: ['mlr3', 'mlr3learners', 'mlr3viz']
 ---
 
 This use case shows how to use the basic mlr3 package on the iris task, so it's our "Hello World" example.
@@ -30,6 +30,8 @@ library("mlr3")
 library("mlr3learners")
 # lots of measures for evaluation
 library("mlr3measures")
+# visualizing results
+library("mlr3viz")
 ```
 
 ## Creating tasks and learners
@@ -137,6 +139,20 @@ bm_grid = benchmark_grid(task, learners, cv10)
 bm = benchmark(bm_grid)
 print(bm)
 print(bm$aggregate(measures = msrs(c("classif.acc", "classif.ce"))))
+```
+
+## Plotting the prediction results 
+
+We can use the `mlr3viz` package to plot our results.
+
+```{r}
+# Setting the task and the selected features
+task = tsk("iris")$select(c("Sepal.Length", "Sepal.Width"))
+# Setting the resampling method
+resampling = rsmp("cv", folds = 9)
+# Setting up the objective we want to visualize
+object = resample(task, learner2, resampling, store_models = TRUE)
+autoplot(object, type = "prediction")
 ```
 
 ## Conclusion

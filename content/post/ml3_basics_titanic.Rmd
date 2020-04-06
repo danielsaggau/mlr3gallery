@@ -178,7 +178,7 @@ res <- resample(task, learner2, rdesc, store_models = TRUE)
 ```
 
 This means we have to find a way to impute the missing values.
-For further information, see the following page: 
+For further information, see the second part of the use case: 
 
 * [Part II - Pipelines](/mlr3_pipelines_titanic/)
 

@@ -22,14 +22,13 @@ lgr::get_logger("mlr3")$set_threshold("warn")
 library(skimr)
 ```
 
-This is the second past of the titanic use case series.
+This is the second post of the titanic use case series.
 In this section we will focus on the usage of `mlr3pipelines`.
 
 ## Imputation
 
-A very simple way to do this to just impute a constant value for each 
-feature, we could i.e. impute every `character` or `factor` column  with `missing` and 
-every numeric column with `-999`.
+A very simple way to do this to just impute a constant value for each feature.
+We could i.e. impute every `character` or `factor` column  with `missing` and every numeric column with `-999`.
 And depending on the model, this might actually be fine.
 This approach has a few drawbacks though:
 
@@ -58,8 +57,8 @@ po_newlvl <- po("imputenewlvl")
 task_newlvl <- po_newlvl$train(list(task))[[1]]
 ```
 
-Note that we use the `PipeOp` in an unusual way, which is why the syntax does not look
-very clean. We'll learn how to use a full graph below.
+Note that we use the `PipeOp` in an unusual way, which is why the syntax does not look very clean.
+We'll learn how to use a full graph below.
 
 First, let's look at the result:
 
@@ -67,15 +66,15 @@ First, let's look at the result:
 task_newlvl$missings()
 ```
 
-Cool! `embarked` does not have missing values anymore. Note that `PipeOpImputeNewLvl` by default
-affects `character`, `factor` and `ordered` columns.
+Cool! `embarked` does not have missing values anymore. 
+Note that `PipeOpImputeNewLvl` by default affects `character`, `factor` and `ordered` columns.
 
 
 For the `numeric` features we want to do two things, impute values and add an indicator column.
 In order to do this, we need a more complicated structure, a `Graph`.
 
-Our `po_indicator` creates the indicator column. We tell it to only do this for `numeric` and `integer` columns
-via its `param_vals`, and additionally tell it to create a numeric column (0 = "not missing", 1 = "missing").
+Our `po_indicator` creates the indicator column.
+We tell it to only do this for `numeric` and `integer` columns via its `param_vals`, and additionally tell it to create a numeric column (0 = "not missing", 1 = "missing").
 
 ```{r}
 po_indicator <- po("missind",
@@ -91,9 +90,7 @@ gr <- gunion(list(po_indicator, po("imputehist")))
 gr <- gr %>>% po("featureunion")
 ```
 
-Afterwards, we `cbind` the resulting data using `po("featureunion")`, connecting the different 
-operations using our **graph connector**: `%>>%`.
-
+Afterwards, we `cbind` the resulting data using `po("featureunion")`, connecting the different operations using our **graph connector**: `%>>%`.
 We can now also connect the newlvl imputation:
 
 ```{r}
@@ -138,7 +135,8 @@ In order to improve more, we might need to do some feature engineering.
 ## Feature Engineering
 
 We will do this using `PipeOpMutate` in order to showcase the power of `mlr3pipelines`.
-Additionally, we will make use of the `character` columns, and thus re-select them:
+Additionally, we will make use of the `character` columns.
+Hence, we will re-select them:
 
 ```{r}
 task$col_roles$feature <- c(task$feature_names, c("cabin", "name", "ticket"))

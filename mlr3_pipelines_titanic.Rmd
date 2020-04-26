@@ -107,7 +107,6 @@ task_imputed$missings()
 Awesome, now we do not have any missing values!
 
 ```{r}
-
 autoplot(task_imputed)
 ```
 
